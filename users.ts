@@ -1,6 +1,6 @@
 import { Client } from 'ts-postgres';
-import { User } from './User';
-import { Credentials } from './Credentials';
+import { User } from './interfaces/User';
+import { Credentials } from './interfaces/Credentials';
 
 export function registerUser(user: User, cred: Credentials): Promise{
 	return new Promise((res,rej) => {

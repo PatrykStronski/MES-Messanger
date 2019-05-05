@@ -1,7 +1,7 @@
 import { Express } from 'express';
 import { users } from './users'; // here all user management is performed
-import { User } from './User'; 
-import { Credentials } from './Credentials';
+import { User } from './interfaces/User'; 
+import { Credentials } from './interfaces/Credentials';
 import { FileManager } from './FileManager'; //here all file saving will be performed
 
 const app = new Express();
