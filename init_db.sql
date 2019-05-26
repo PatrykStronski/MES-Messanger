@@ -1,4 +1,4 @@
-CREATE TABLE User (
+CREATE TABLE Account (
 	id SERIAL PRIMARY KEY,
 	login VARCHAR(20) NOT NULL,
 	password VARCHAR(20) NOT NULL, 
@@ -9,13 +9,14 @@ CREATE TABLE User (
 
 CREATE TABLE Conversation (
 	id SERIAL PRIMARY KEY,
-	user1 INT references User(id) NOT NULL,
-	user2 INT references User(id) NOT NULL
+	account1 INT references Account(id) NOT NULL,
+	account2 INT references Account(id) NOT NULL
 );
 
 CREATE TABLE Message (
 	id SERIAL PRIMARY KEY,
-	author INT references User(id) NOT NULL,
+	author INT references Account(id) NOT NULL,
 	date_written DATE NOT NULL,
-	conv INT references Conversation(id) NOT NULL
-)
+	conv INT references Conversation(id) NOT NULL,
+	read BOOLEAN default false
+);
