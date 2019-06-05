@@ -41,3 +41,5 @@ export function authenticate(cred: Credentials): Promise{
 		await clieny.end();
 	});
 }
+
+function generateToken(

@@ -14,7 +14,31 @@ export function saveMessage(msg: Message): Promise<undefined>{
 	});
 }
 
-export function getMessage(msgId: number): Promise<string>https://www.antyradio.pl/media/galeria/171746/171751/38{
+export async function fetchAllMsg(conv_id: number): Message[]{
+	const client = new Client();
+	await client.connect();
+	const stream = client.query(
+	 	'SELECT FROM message WHERE conv='+conv_id+' AS msgs;'
+	);
+	let arr: Message[] = [];
+	for await(const row of stream) {
+		arr.push(row.get('msgs'));
+	}
+	return arr;
+}
+
+export async function fetchConv(us1: string, us2: string): number{
+	const client = new Client();
+	await client.connect();
+	const stream = client.query(
+	 	'SELECT FROM conversation WHERE (account1 LIKE '+us1+' OR '+'account2 LIKE '+us2+') AND ( account1 LIKE '+us2+'account2 LIKE '+us1+' AS con;'
+	);
+	for await(const row of stream) {
+		return row.get('con');
+	}
+}
+
+export function getMessage(msgId: number): Promise<string>{
 	return new Promise(async (res,rej) =>{
 		const client = new Client();
 		await client.connect();
