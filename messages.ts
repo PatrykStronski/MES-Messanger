@@ -1,9 +1,8 @@
 import { Client } from 'ts-postgres';
 import { Message } from './interfaces/Message';
-import { Conversation } from './interfaces/Conversation'; //????
 import { User } from './interfaces/User';
 
-export function saveMessage(msg: Message){
+export function saveMessage(msg: Message): Promise<undefined>{
 	return new Promise(async (res,rej) =>{
 		const client = new Client();
 		await client.connect();
@@ -15,7 +14,7 @@ export function saveMessage(msg: Message){
 	});
 }
 
-export function getMessage(msgId: number){
+export function getMessage(msgId: number): Promise<string>https://www.antyradio.pl/media/galeria/171746/171751/38{
 	return new Promise(async (res,rej) =>{
 		const client = new Client();
 		await client.connect();

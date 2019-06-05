@@ -7,7 +7,7 @@ export function registerUser(user: User, cred: Credentials): Promise{
 		const client = new Client();
 		await client.connect();
 		const stream = client.query(
-			'INSERT INTO account(login,pass,name,lname) VALUES('cred.login+','+cred.password+','+user.name+','+user.l_name');'
+			'INSERT INTO account(login,pass,name,lname) VALUES('+cred.login+','+cred.password+','+user.name+','+user.l_name+');'
 		);
 		await client.end();
 		res();

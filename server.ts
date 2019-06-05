@@ -1,11 +1,11 @@
 import { Express } from 'express';
-import * from './users'; // here all user management is performed
 import { User } from './interfaces/User'; 
 import * as users from './users';
 import * as msg from './messages';
 import { Credentials } from './interfaces/Credentials';
-import { FileManager } from './FileManager'; //here all file saving will be performed
-import * as socketio from './socket.io';
+import { Message } from './interfaces/Message';
+//import { FileManager } from './FileManager'; //here all file saving will be performed
+import * as socketio from 'socket.io';
 
 const app = new Express();
 const http = require('http').Server(app); 
@@ -33,11 +33,11 @@ app.post('/login',(req,res) => {
 	.catch(() => {
 		res.rendStatus(403);
 	});
-}):
+});
 
 socketio.on("connection", (socket: any) => {
 	console.log("a user connected");
-	socket.on("message", function(message: any) {
+	socket.on("message", function(message: Message) {
     console.log(message);
   });
-}):
+});
