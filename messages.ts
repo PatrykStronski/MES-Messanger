@@ -14,20 +14,20 @@ export function saveMessage(msg: Message): Promise<undefined>{
 	});
 }
 
-export async function fetchAllMsg(conv_id: number): Message[]{
+export async function fetchAllMsg(conv_id: number){
 	const client = new Client();
 	await client.connect();
 	const stream = client.query(
 	 	'SELECT FROM message WHERE conv='+conv_id+' AS msgs;'
 	);
-	let arr: Message[] = [];
+	let arr: any[] = [];
 	for await(const row of stream) {
 		arr.push(row.get('msgs'));
 	}
 	return arr;
 }
 
-export async function fetchConv(us1: string, us2: string): number{
+export async function fetchConv(us1: string, us2: string){
 	const client = new Client();
 	await client.connect();
 	const stream = client.query(
@@ -38,7 +38,7 @@ export async function fetchConv(us1: string, us2: string): number{
 	}
 }
 
-export function getMessage(msgId: number): Promise<string>{
+export function getMessage(msgId: number): Promise<any>{
 	return new Promise(async (res,rej) =>{
 		const client = new Client();
 		await client.connect();

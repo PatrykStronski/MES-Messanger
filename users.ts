@@ -1,6 +1,7 @@
 import { Client } from 'ts-postgres';
 import { User } from './interfaces/User';
 import { Credentials } from './interfaces/Credentials';
+import * as crypto from 'crypto';
 
 export function registerUser(user: User, cred: Credentials): Promise{
 	return new Promise(async (res,rej) => {
@@ -24,22 +25,31 @@ export function getUser(cred: Credentials): Promise{
 		for await(const row of stream) {
 			res(row.get('us'));
 		}
-		await clieny.end();
+		await client.end();
 	});
 }
 
-export function authenticate(cred: Credentials): Promise{
+export function authenticate(cred: Credentials): Promise<any>{
 	return new Promise(async(res,rej) => {
 		const client = new Client();
 		await client.connect();
 		const stream = client.query(
 			'SELECT auth('+cred.login+','+cred.password+') AS authorized;'
 		);
+		let ind: boolean = false;
 		for await(const row of stream) {
-			res(row.get('authorized'));
+			if(row.get('authorized')){
+				ind=true;
+			}
 		}
-		await clieny.end();
+		await client.end();
+		if(ind){
+			res(createToken());
+		} else {
+			rej();
+		}
 	});
 }
 
-function generateToken(
+function createToken(): string{
+}

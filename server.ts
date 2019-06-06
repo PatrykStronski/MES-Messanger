@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import Express = require('express');
 import { User } from './interfaces/User'; 
 import * as users from './users';
 import * as msg from './messages';
@@ -6,21 +6,23 @@ import { Credentials } from './interfaces/Credentials';
 import { Message } from './interfaces/Message';
 //import { FileManager } from './FileManager'; //here all file saving will be performed
 import * as socketio from 'socket.io';
-import { Auth } from './interfaces/Auth.ts';
+import { Auth } from './interfaces/Auths';
 import * as _ from 'underscore';
-import * as redis from 'socket.io-redis';
-io.adapter(redis({ host: 'localhost', port: 6379 }));
+import redis = require('socket.io-redis');
+import bodyparser = require('body-parser');
 
-const app = new Express();
+const app = Express();
+app.use('bodyparser');
 let http = require("http").Server(app);
 let io = require("socket.io")(http);
+io.adapter(redis({ host: 'localhost', port: 6379 }));
 
 let tokens: Auth[] = []
 
 app.post('/register',(req,res)=> {
-	let user: User = null;
-	user.name = req.name;
-	user.l_name = req.l_name;
+	let user: User = {name: "", l_name: ""};
+	user.name = req.body.name;
+	user.l_name = req.body.l_name;
 	let cred: Credentials;
 	users.registerUser(user)
 	.then(()=>{
@@ -77,7 +79,7 @@ app.post('/whole_conversation',(req,res) => {
 		.then((msgs) => {
 			res.send(msgs);
 		});
-	});
+	})
 	.catch(() => {
 		res.sendStatus(203);
 	});

@@ -16,7 +16,7 @@ CREATE TABLE Conversation (
 CREATE TABLE Message (
 	id SERIAL PRIMARY KEY,
 	author INT references Account(id) NOT NULL,
-	date_written DATE NOT NULL,
+	date_written TIMESTAMP NOT NULL,
 	conv INT references Conversation(id) NOT NULL,
 	read BOOLEAN default false
 );
