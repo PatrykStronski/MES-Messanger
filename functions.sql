@@ -15,5 +15,19 @@ DECLARE
 	END IF;
  END;
  $authenticated$ LANGUAGE plpgsql;
-CREATE FUNCTION
 
+CREATE FUNCTION convExists(INT)
+	RETURNS boolean AS $ex$
+DECLARE
+	ex BOOLEAN;
+	i ALIAS FOR $1;
+	ii INT;
+	BEGIN
+		SELECT id INTO ii FROM conversation WHERE id=i;
+		IF(ii)
+			THEN RETURN true;
+		ELSE
+			RETURN false;
+		END IF;
+	END;
+	$ex$ LANGUAGE plpgsql;

@@ -1,0 +1,55 @@
+import { Client } from 'ts-postgres';
+import { User } from './interfaces/User';
+import { Credentials } from './interfaces/Credentials';
+import * as crypto from 'crypto';
+
+export async function registerUser(user: User, cred: Credentials){
+	const client = new Client();
+	await client.connect();
+	const stream = client.query(
+		'INSERT INTO account(login,pass,name,lname) VALUES('+cred.login+','+cred.password+','+user.name+','+user.l_name+');'
+	);
+	await client.end();
+}
+
+export async function getUser(cred: Credentials){
+	return new Promise(async (res,rej) => {
+		const client = new Client();
+		await client.connect();
+		const stream = client.query(
+			'SELECT * FROM account WHERE login LIKE '+cred.login+' AND pass LIKE '+cred.password+' AS us;'
+		);
+		for await(const row of stream) {
+			return row.get('us');
+		}
+		await client.end();
+	});
+}
+
+export function authenticate(cred: Credentials): Promise<any>{
+	return new Promise(async(res,rej) => {
+		const client = new Client();
+		await client.connect();
+		const stream = client.query(
+			'SELECT auth('+cred.login+','+cred.password+') AS authorized;'
+		);
+		let ind: boolean = false;
+		for await(const row of stream) {
+			if(row.get('authorized')){
+				ind=true;
+			}
+		}
+		await client.end();
+		if(ind){
+			res(createToken(cred));
+		} else {
+			rej();
+		}
+	});
+}
+
+function createToken(creds: Credentials): string{
+	let mykey = crypto.createCipher('aes-128-cbc',creds.password);
+	let mystr = mykey.update(creds.login,'utf8','hex');
+	return mystr;
+}

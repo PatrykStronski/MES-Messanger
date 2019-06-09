@@ -1,55 +1,50 @@
-import { Client } from 'ts-postgres';
+import { Pool } from 'pg';
 import { User } from './interfaces/User';
 import { Credentials } from './interfaces/Credentials';
 import * as crypto from 'crypto';
 
-export function registerUser(user: User, cred: Credentials): Promise{
-	return new Promise(async (res,rej) => {
-		const client = new Client();
-		await client.connect();
-		const stream = client.query(
-			'INSERT INTO account(login,pass,name,lname) VALUES('+cred.login+','+cred.password+','+user.name+','+user.l_name+');'
-		);
-		await client.end();
-		res();
+const pool = new Pool({
+	user: 'azath',
+	host: 'localhost',
+	database: 'messanger',
+	password: 'waran138',
+	port: 5432
+});
+
+export async function registerUser(user: User, cred: Credentials){
+	await pool.query(
+		`INSERT INTO account(login,pass,name,lname) VALUES('${cred.login}','${cred.password}','${user.name}','${user.lname}');`
+	);
+}
+
+export function getUser(cred: Credentials): Promise<User>{
+	return new Promise((resolve,reject) => {
+		pool.query(
+			`SELECT * FROM account WHERE login LIKE '${cred.login}' AND pass LIKE '${cred.password}';`
+		, (err,res) => {
+			if(err) throw err;
+			pool.end();
+			resolve(res.rows[0]);
+		});
 	});
 }
 
-export function getUser(cred: Credentials): Promise{
-	return new Promise(async (res,rej) => {
-		const client = new Client();
-		await client.connect();
-		const stream = client.query(
-			'SELECT * FROM accounts WHERE login LIKE'+cred.login+' AND pass LIKE'+cred.password+' AS us;'
-		);
-		for await(const row of stream) {
-			res(row.get('us'));
-		}
-		await client.end();
-	});
-}
-
-export function authenticate(cred: Credentials): Promise<any>{
-	return new Promise(async(res,rej) => {
-		const client = new Client();
-		await client.connect();
-		const stream = client.query(
-			'SELECT auth('+cred.login+','+cred.password+') AS authorized;'
-		);
-		let ind: boolean = false;
-		for await(const row of stream) {
-			if(row.get('authorized')){
-				ind=true;
+export function authenticate(cred: Credentials){
+	return new Promise((resolve,reject) => {
+	const stream = pool.query(
+		`SELECT auth('${cred.login}','${cred.password}');`
+	,(err,res) =>{
+			if(res.rows[0].auth){
+				resolve(createToken(cred));
+			} else {
+				reject();
 			}
-		}
-		await client.end();
-		if(ind){
-			res(createToken());
-		} else {
-			rej();
-		}
+		});
 	});
 }
 
-function createToken(): string{
+function createToken(creds: Credentials): string{
+	let mykey = crypto.createCipheriv('aes-128-cbc',creds.password,"iv");
+	let mystr = mykey.update(creds.login,'utf8','hex');
+	return mystr;
 }

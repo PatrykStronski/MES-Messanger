@@ -20,11 +20,10 @@ io.adapter(redis({ host: 'localhost', port: 6379 }));
 let tokens: Auth[] = []
 
 app.post('/register',(req,res)=> {
-	let user: User = {name: "", l_name: ""};
-	user.name = req.body.name;
-	user.l_name = req.body.l_name;
-	let cred: Credentials;
-	users.registerUser(user)
+	let user: User = req.body.user;
+	user.lname = req.body.lname;
+	let cred: Credentials = req.body.credentials;
+	users.registerUser(user,cred)
 	.then(()=>{
 		res.sendStatus(200);
 	})
@@ -37,17 +36,16 @@ app.post('/login',(req,res) => {
 	let cred: Credentials = req.body;
 	users.authenticate(cred)
 	.then((token) => {
-		logins.push(token);
 		res.send(token);
 	})
 	.catch(() => {
-		res.rendStatus(403);
+		res.sendStatus(403);
 	});
 });
 
 app.post('/logout',(req,res)=> {
 	_.find(tokens,(elem,i)=> {
-		if(elem.token===req.token){
+		if(elem.token===req.body.token){
 			tokens.splice(i,1);
 			return true;
 		}
@@ -71,9 +69,9 @@ io.on("connection", (socket: any) => {
 });
 
 app.post('/whole_conversation',(req,res) => {
-	let us1 = req.users[0];
-	let us2 =	req.users[1];
-	msg.fetchConvId()
+	let us1 = req.body.users[0];
+	let us2 =	req.body.users[1];
+	msg.fetchConv(us1,us2)
 	.then((convId)=> {
 		msg.fetchAllMsg(convId)
 		.then((msgs) => {
@@ -86,6 +84,6 @@ app.post('/whole_conversation',(req,res) => {
 });
 
 io.listen(8081)
-app.listen(() => {
+app.listen(8080,() => {
 	console.log("serv init");
-},8080);
+});

@@ -1,54 +1,52 @@
-import { Client } from 'ts-postgres';
+import { Pool } from 'pg';
 import { Message } from './interfaces/Message';
 import { User } from './interfaces/User';
 
-export function saveMessage(msg: Message): Promise<undefined>{
-	return new Promise(async (res,rej) =>{
-		const client = new Client();
-		await client.connect();
-		const stream = client.query(
-			'INSERT INTO message(author,date_written,conv) VALUES ('+msg.author+','+msg.date_written+','+msg.conv+');'
-		);
-		await client.end();
-		res();
-	});
+const pool = new Pool({
+	user: 'azath',
+	host: 'localhost',
+	database: 'messanger',
+	password: 'waran138',
+	port: 5432
+});
+
+export async function saveMessage(msg: Message, login1: string, login2: string){
+	const chk_conv = await pool.query(`SELECT convExists(${msg});`);
+	if(chk_conv.rows[0].convExists==false){
+		await createConversation(login1,login2)
+	}
+	const stream = await pool.query(
+		`INSERT INTO message(author,date_written,conv) VALUES ('${msg.author}','${msg.date_written}','${msg.conv}');`
+	);
 }
 
 export async function fetchAllMsg(conv_id: number){
-	const client = new Client();
-	await client.connect();
-	const stream = client.query(
-	 	'SELECT FROM message WHERE conv='+conv_id+' AS msgs;'
+	const stream = await pool.query(
+	 	`SELECT * FROM message WHERE conv='${conv_id}';`
 	);
-	let arr: any[] = [];
-	for await(const row of stream) {
-		arr.push(row.get('msgs'));
+	if(stream.rowCount>0){
+		return stream;
+	} else {
+		return Promise.reject();
 	}
-	return arr;
 }
 
 export async function fetchConv(us1: string, us2: string){
-	const client = new Client();
-	await client.connect();
-	const stream = client.query(
-	 	'SELECT FROM conversation WHERE (account1 LIKE '+us1+' OR '+'account2 LIKE '+us2+') AND ( account1 LIKE '+us2+'account2 LIKE '+us1+' AS con;'
+	const stream = await pool.query(
+	 	'SELECT id FROM conversation WHERE (account1 LIKE '+us1+' OR '+'account2 LIKE '+us2+') AND ( account1 LIKE '+us2+'account2 LIKE '+us1+';'
 	);
-	for await(const row of stream) {
-		return row.get('con');
-	}
+	return stream.rows[0];
 }
 
-export function getMessage(msgId: number): Promise<any>{
-	return new Promise(async (res,rej) =>{
-		const client = new Client();
-		await client.connect();
-		const stream = client.query(
-			'SELECT * FROM message WHERE id='+msgId+' AS msg;'
-		);
-		for await(const row of stream) {
-			res(row.get('msg'));
-		}
+async function createConversation(userlog1: number, userlog2: number){
+	const log_ids = await pool.query(`SELECT id FROM account WHERE login LIKE ${userlog1} OR login LIKE ${userlog2};`);
+	let userid1 = lod_ids.rows[0].id;
+	let userid2 = lod_ids.rows[1].id;
+	const stream = await pool.query(`INSERT INTO conversation(account1, account2) VALUES(${userid1},${userid2});`);
+}
 
-		await client.end();
-	});
+export async function getMessage(msgId: number){
+	const stream = await pool.query(
+		'SELECT * FROM message WHERE id='+msgId+' AS msg;'
+	);
 }
