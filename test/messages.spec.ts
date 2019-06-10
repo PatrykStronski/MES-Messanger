@@ -11,10 +11,23 @@ import { Message } from '../interfaces/Message';
 		conv: 0,
 		read: false
 	}
-	msg.fetchAllMsg(1)
+	const log1 = 'user';
+	const log2 = 'dupa';
+	msg.fetchAllMsg(log1,log2)
 	.then((data) => {
 		assert.fail();
 	})
 	.catch(() => {
+	});
+	msg.saveMessage(msg1,log1,log2)
+	.then(() =>{
+		msg.fetchAllMsg(log1,log2)
+		.then((conv) => {
+			console.log(conv);
+			//expect(conv.length).to.be.at.least(1);
+		});
+	})
+	.catch(() => {
+		assert.fail();
 	});
 }

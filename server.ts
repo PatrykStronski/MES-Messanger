@@ -56,9 +56,8 @@ app.post('/logout',(req,res)=> {
 
 io.on("connection", (socket: any) => {
 	console.log("a user connected");
-	socket.on("message", function(message: Message) {
-    console.log(message);
-		msg.saveMessage(message)
+	socket.on("message",(message: any)=> {
+		msg.saveMessage(message.mgs,message.us1,message.us2)
 		.then(() => {
 			socket.emit(message);
 		})
@@ -71,12 +70,9 @@ io.on("connection", (socket: any) => {
 app.post('/whole_conversation',(req,res) => {
 	let us1 = req.body.users[0];
 	let us2 =	req.body.users[1];
-	msg.fetchConv(us1,us2)
-	.then((convId)=> {
-		msg.fetchAllMsg(convId)
-		.then((msgs) => {
-			res.send(msgs);
-		});
+	msg.fetchAllMsg(us1,us2)
+	.then((msgs) => {
+		res.send(msgs);
 	})
 	.catch(() => {
 		res.sendStatus(203);
