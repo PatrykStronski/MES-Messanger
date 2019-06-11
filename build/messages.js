@@ -92,21 +92,12 @@ function fetchAllMsg(us1, us2) {
 exports.fetchAllMsg = fetchAllMsg;
 function fetchConv(us1, us2) {
     return __awaiter(this, void 0, void 0, function () {
-        var stream, e_1;
+        var stream;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, pool.query('SELECT id FROM conversation WHERE (account1 LIKE ' + us1 + ' AND account2 LIKE ' + us2 + ') OR ( account1 LIKE ' + us2 + ' AND account2 LIKE ' + us1 + ';')];
+                case 0: return [4 /*yield*/, pool.query('SELECT id FROM conversation WHERE (account1 LIKE ' + us1 + ' AND account2 LIKE ' + us2 + ') OR ( account1 LIKE ' + us2 + ' AND account2 LIKE ' + us1 + ';')];
                 case 1:
                     stream = _a.sent();
-                    return [3 /*break*/, 3];
-                case 2:
-                    e_1 = _a.sent();
-                    console.log(e_1);
-                    return [3 /*break*/, 3];
-                case 3:
-                    ;
                     console.log(stream);
                     return [2 /*return*/, stream.rows[0]];
             }
