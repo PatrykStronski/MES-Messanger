@@ -10,14 +10,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var chai_1 = require("chai");
 var msg = __importStar(require("../messages"));
 {
-    var msg1 = {
-        author: 2,
-        date_written: '2019/12/04 12:42:42',
-        conv: 0,
-        read: false
-    };
     var log1_1 = 'user';
     var log2_1 = 'dupa';
+    var msg1 = {
+        author: log1_1,
+        date_written: '2019/12/04 12:42:42',
+        conv: 1,
+        content: "caidscbyisfbvuadfnvoudnfo",
+        read: false
+    };
     msg.fetchAllMsg(log1_1, log2_1)
         .then(function (data) {
         chai_1.assert.fail();

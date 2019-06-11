@@ -1,6 +1,8 @@
 export interface Message{
-	author: number;
+	author: string;
+	author_id?: number;
 	date_written: string;
 	conv: number;
 	read: boolean;
+	content: string;
 }

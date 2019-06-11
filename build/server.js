@@ -74,6 +74,8 @@ app.post('/whole_conversation', function (req, res) {
         res.sendStatus(203);
     });
 });
+app.post('/getMessage', function (req, res) {
+});
 io.listen(8081);
 app.listen(8080, function () {
     console.log("serv init");

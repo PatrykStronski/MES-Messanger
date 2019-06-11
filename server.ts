@@ -79,6 +79,10 @@ app.post('/whole_conversation',(req,res) => {
 	});
 });
 
+app.post('/getMessage', (req,res) => {
+
+});
+
 io.listen(8081)
 app.listen(8080,() => {
 	console.log("serv init");

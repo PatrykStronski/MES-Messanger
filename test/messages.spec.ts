@@ -5,14 +5,15 @@ import { User } from '../interfaces/User';
 import { Message } from '../interfaces/Message';
 
 {
-	const msg1: Message = {
-		author: 2,
-		date_written: '2019/12/04 12:42:42',
-		conv: 0,
-		read: false
-	}
 	const log1 = 'user';
 	const log2 = 'dupa';
+	const msg1: Message = {
+		author: log1,
+		date_written: '2019/12/04 12:42:42',
+		conv: 1,
+		content: "caidscbyisfbvuadfnvoudnfo",
+		read: false
+	}
 	msg.fetchAllMsg(log1,log2)
 	.then((data) => {
 		assert.fail();

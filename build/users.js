@@ -64,12 +64,21 @@ function registerUser(user, cred) {
     });
 }
 exports.registerUser = registerUser;
+function getUserId(login) {
+    return new Promise(function (resolve, reject) {
+        var id = pool.query("SELECT id FROM account WHERE login LIKE '" + login + "';", function (err, res) {
+            if (err)
+                throw err;
+            resolve(res.rows[0].id);
+        });
+    });
+}
+exports.getUserId = getUserId;
 function getUser(cred) {
     return new Promise(function (resolve, reject) {
         pool.query("SELECT * FROM account WHERE login LIKE '" + cred.login + "' AND pass LIKE '" + cred.password + "';", function (err, res) {
             if (err)
                 throw err;
-            pool.end();
             resolve(res.rows[0]);
         });
     });

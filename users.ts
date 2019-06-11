@@ -17,13 +17,22 @@ export async function registerUser(user: User, cred: Credentials){
 	);
 }
 
+export function getUserId(login:string): Promise<number>{
+	return new Promise((resolve,reject) => {
+		const id = pool.query(
+			`SELECT id FROM account WHERE login LIKE '${login}';`, (err,res) => {
+			if(err) throw err;
+			resolve(res.rows[0].id);
+		});
+	});
+}
+
 export function getUser(cred: Credentials): Promise<User>{
 	return new Promise((resolve,reject) => {
 		pool.query(
 			`SELECT * FROM account WHERE login LIKE '${cred.login}' AND pass LIKE '${cred.password}';`
 		, (err,res) => {
 			if(err) throw err;
-			pool.end();
 			resolve(res.rows[0]);
 		});
 	});
