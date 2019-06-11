@@ -35,13 +35,9 @@ export async function fetchAllMsg(us1: string, us2: string){
 }
 
 async function fetchConv(us1: string, us2: string){
-	try{
-	var stream = await pool.query(
+	const stream = await pool.query(
 	 	'SELECT id FROM conversation WHERE (account1 LIKE '+us1+' AND account2 LIKE '+us2+') OR ( account1 LIKE '+us2+' AND account2 LIKE '+us1+';'
 	);
-	} catch(e) {
-		console.log(e);
-	};
 	console.log(stream);
 	return stream.rows[0];
 }
