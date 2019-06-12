@@ -8,14 +8,12 @@ import { Message } from './interfaces/Message';
 import * as socketio from 'socket.io';
 import { Auth } from './interfaces/Auths';
 import * as _ from 'underscore';
-import redis = require('socket.io-redis');
 import bodyparser = require('body-parser');
 
 const app = Express();
 app.use(bodyparser);
 let http = require("http").Server(app);
 let io = require("socket.io")(http);
-io.adapter(redis({ host: 'localhost', port: 6379 }));
 
 let tokens: Auth[] = []
 

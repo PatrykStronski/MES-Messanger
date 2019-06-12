@@ -11,13 +11,11 @@ var Express = require("express");
 var users = __importStar(require("./users"));
 var msg = __importStar(require("./messages"));
 var _ = __importStar(require("underscore"));
-var redis = require("socket.io-redis");
 var bodyparser = require("body-parser");
 var app = Express();
 app.use(bodyparser);
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
-io.adapter(redis({ host: 'localhost', port: 6379 }));
 var tokens = [];
 app.post('/register', function (req, res) {
     var user = req.body.user;
