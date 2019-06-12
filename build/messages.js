@@ -50,21 +50,22 @@ function saveMessage(msg, login1, login2) {
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     pool.query("SELECT convExists(" + msg.conv + ");", function (err, res) { return __awaiter(_this, void 0, void 0, function () {
-                        var convid, _a;
-                        return __generator(this, function (_b) {
-                            switch (_b.label) {
+                        var _a, _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
                                 case 0:
-                                    if (!(res.rows[0].convExists == false)) return [3 /*break*/, 2];
+                                    if (!(res.rows[0].convexists == false)) return [3 /*break*/, 2];
+                                    _a = msg;
                                     return [4 /*yield*/, createConversation(login1, login2)];
                                 case 1:
-                                    convid = _b.sent();
-                                    _b.label = 2;
+                                    _a.conv = _c.sent();
+                                    _c.label = 2;
                                 case 2:
-                                    _a = msg;
+                                    _b = msg;
                                     return [4 /*yield*/, users_1.getUserId(msg.author)];
                                 case 3:
-                                    _a.author_id = _b.sent();
-                                    pool.query("INSERT INTO message(author,date_written,conv,content) VALUES (" + msg.author_id + ",'" + msg.date_written + "','" + msg.conv + "','" + msg.content + "');", function (err, res) {
+                                    _b.author_id = _c.sent();
+                                    pool.query("INSERT INTO message(author,date_written,conv,content) VALUES (" + msg.author_id + ",'" + msg.date_written + "'," + msg.conv + ",'" + msg.content + "');", function (err, res) {
                                         if (err)
                                             throw err;
                                         resolve();
@@ -129,7 +130,12 @@ function fetchConv(us1, us2) {
                                 return [4 /*yield*/, pool.query('SELECT id FROM conversation WHERE (account1 = ' + us1_id + ' AND account2 = ' + us2_id + ') OR ( account1 = ' + us2_id + ' AND account2 = ' + us1_id + ');', function (err, res) {
                                         if (err)
                                             throw err;
-                                        resolve(res.rows[0].id);
+                                        if (res.rowCount > 0) {
+                                            resolve(res.rows[0].id);
+                                        }
+                                        else {
+                                            reject();
+                                        }
                                     })];
                             case 3:
                                 stream = _a.sent();
@@ -140,20 +146,44 @@ function fetchConv(us1, us2) {
         });
     });
 }
+function greatestId(tablename) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    pool.query("SELECT MAX(id) FROM " + tablename + ";", function (err, res) {
+                        if (err)
+                            throw err;
+                        resolve(res.rows[0].max);
+                    });
+                })];
+        });
+    });
+}
 function createConversation(userlog1, userlog2) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
                     return __generator(this, function (_a) {
-                        pool.query("SELECT id FROM account WHERE login LIKE " + userlog1 + " OR login LIKE " + userlog2 + ";", function (err, log_ids) {
+                        pool.query("SELECT id FROM account WHERE login LIKE '" + userlog1 + "' OR login LIKE '" + userlog2 + "';", function (err, log_ids) {
                             var userid1 = log_ids.rows[0].id;
                             var userid2 = log_ids.rows[1].id;
-                            pool.query("INSERT INTO conversation(account1, account2) VALUES(" + userid1 + "," + userid2 + ");", function (err) {
-                                if (err)
-                                    throw err;
-                                resolve();
-                            });
+                            pool.query("INSERT INTO conversation(account1, account2) VALUES(" + userid1 + "," + userid2 + ");", function (err, res) { return __awaiter(_this, void 0, void 0, function () {
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            if (err)
+                                                throw err;
+                                            _a = resolve;
+                                            return [4 /*yield*/, greatestId('conversation')];
+                                        case 1:
+                                            _a.apply(void 0, [_b.sent()]);
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); });
                         });
                         return [2 /*return*/];
                     });

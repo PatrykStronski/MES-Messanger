@@ -24,7 +24,6 @@ import { Message } from '../interfaces/Message';
 	.then(() =>{
 		msg.fetchAllMsg(log1,log2)
 		.then((conv) => {
-			console.log(conv);
 			expect(conv.length).to.be.at.least(1);
 		});
 	})
