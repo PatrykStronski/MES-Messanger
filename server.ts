@@ -1,25 +1,29 @@
-import Express = require('express');
+import express = require('express');
 import { User } from './interfaces/User'; 
 import * as users from './users';
 import * as msg from './messages';
 import { Credentials } from './interfaces/Credentials';
 import { Message } from './interfaces/Message';
-//import { FileManager } from './FileManager'; //here all file saving will be performed
-import * as socketio from 'socket.io';
 import { Auth } from './interfaces/Auths';
 import * as _ from 'underscore';
 import bodyparser = require('body-parser');
+import * as path from 'path';
 
-const app = Express();
-app.use(bodyparser);
-let http = require("http").Server(app);
-let io = require("socket.io")(http);
-
+const app: express.Application = express();
+//app.use(bodyparser);
+app.use(bodyparser.json());
 let tokens: Auth[] = []
+
+app.get('/',(req,res) => {
+	res.sendFile(path.resolve(__dirname,'login.html'));
+});
+
+app.get('/chat',(req,res) => {
+	res.sendFile(path.resolve(__dirname,'chat.html'));
+});
 
 app.post('/register',(req,res)=> {
 	let user: User = req.body.user;
-	user.lname = req.body.lname;
 	let cred: Credentials = req.body.credentials;
 	users.registerUser(user,cred)
 	.then(()=>{
@@ -32,6 +36,7 @@ app.post('/register',(req,res)=> {
 
 app.post('/login',(req,res) => {
 	let cred: Credentials = req.body;
+	console.log(cred);
 	users.authenticate(cred)
 	.then((token) => {
 		res.send(token);
@@ -52,7 +57,7 @@ app.post('/logout',(req,res)=> {
 	res.sendStatus(200);
 });
 
-io.on("connection", (socket: any) => {
+/*io.on("connection", (socket: any) => {
 	console.log("a user connected");
 	socket.on("message",(message: any)=> {
 		msg.saveMessage(message.mgs,message.us1,message.us2)
@@ -63,6 +68,18 @@ io.on("connection", (socket: any) => {
 			console.log("something with connection");
 		})
   });
+});
+*/
+app.post('/sendmessage',async (req,res) => {
+	let mes: Message = req.body.message;
+	let us1: string = req.body.user1;
+	let us2: string = req.body.user2;
+	try{
+	await msg.saveMessage(mes,us1,us2);
+	} catch(err) {
+		res.sendStatus(500);
+	}
+	res.sendStatus(200);
 });
 
 app.post('/whole_conversation',(req,res) => {
@@ -77,11 +94,6 @@ app.post('/whole_conversation',(req,res) => {
 	});
 });
 
-app.post('/getMessage', (req,res) => {
-
-});
-
-io.listen(8081)
-app.listen(8080,() => {
+app.listen(3000,() => {
 	console.log("serv init");
 });

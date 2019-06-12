@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> login </title>
+		<script>
+			function logIn(){
+				let js = {
+					login: document.getElementById('login1').value,
+					password: document.getElementById('pass1').value,
+				};
+				xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					 if (this.readyState == 4 && this.status == 200) {
+						document.location = "/chat";
+					 } else {
+						 if(this.status=403){
+							 document.getElementsByTagName('body')[0].innerHTML+= "AUTH FAILED";
+						 }
+					 }
+				}
+					xhr.open("POST","/login",true);
+					xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+					xhr.send(JSON.stringify(js));
+			}
+
+			function registerIn(){
+				xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					 if (this.readyState == 4 && this.status == 200) {
+						document.location = "/chat";
+					 } else {
+						 if(this.status=403){
+							 document.getElementsByTagName('body')[0].innerHTML+= "REGISTRATION FAILED";
+						 }
+					 }
+				}
+				let js = {
+					credentials: {
+						login: document.getElementById('login').value,
+						password: document.getElementById('pass').value,
+					},
+					user: {
+						name: document.getElementById('name').value,
+						lname: document.getElementById('lname').value,
+					}
+				}
+				xhr.open("POST","/register",true);
+				xhr.send(JSON.stringify(js));
+			}
+	</script>
+	</head>
+	<body>
+		<h1> log in </h1>
+		<form onsubmit="event.preventDefault();logIn()">
+			<label> login
+				<input type="text" id="login1">
+			</label>
+			<label> password
+				<input type="password" id="pass1">
+			</label>
+			<input type="submit">
+		</form>
+		<h1> register</h1>
+		<form onsubmit="event.preventDefault();registerIn()">
+			<input type="text" id="login">
+			<input type="password" id="pass">
+			<input type="text" id="name">
+			<input type="text" id="lname">
+			<input type="submit">
+		</form>
+	</body>
+</html>
+

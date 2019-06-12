@@ -12,7 +12,7 @@ const pool = new Pool({
 });
 
 export async function registerUser(user: User, cred: Credentials){
-	await pool.query(
+	pool.query(
 		`INSERT INTO account(login,pass,name,lname) VALUES('${cred.login}','${cred.password}','${user.name}','${user.lname}');`
 	);
 }
@@ -53,7 +53,5 @@ export function authenticate(cred: Credentials){
 }
 
 function createToken(creds: Credentials): string{
-	let mykey = crypto.createCipheriv('aes-128-cbc',creds.password,"iv");
-	let mystr = mykey.update(creds.login,'utf8','hex');
-	return mystr;
+	return "token";
 }
