@@ -5,9 +5,9 @@ import { User } from '../interfaces/User';
 
 // insert user to db
 {
-	const cred: Credentials = {login: "fajnyUser",password: "chujowechasło"}
-	const cred2: Credentials = {login: "głupiUser",password: "chujowechasło"}
-	const us: User = {name: "fajny user",lname: "barszo fajny"}
+	const cred: Credentials = {login: "fajnyUser",password: "hasło"}
+	const cred2: Credentials = {login: "testUser",password: "hasło"}
+	const us: User = {name: "testUser",lname: "fajny"}
 	users.getUser(cred)
 	.then((repl) => {
 		expect(repl).to.be.an('object');

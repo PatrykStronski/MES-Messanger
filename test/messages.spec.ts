@@ -6,7 +6,7 @@ import { Message } from '../interfaces/Message';
 
 {
 	const log1 = 'user';
-	const log2 = 'dupa';
+	const log2 = 'us1';
 	const msg1: Message = {
 		author: log1,
 		date_written: '2019/12/04 12:42:42',
