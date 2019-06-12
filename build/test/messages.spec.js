@@ -11,7 +11,7 @@ var chai_1 = require("chai");
 var msg = __importStar(require("../messages"));
 {
     var log1_1 = 'user';
-    var log2_1 = 'dupa';
+    var log2_1 = 'us1';
     var msg1 = {
         author: log1_1,
         date_written: '2019/12/04 12:42:42',
@@ -29,7 +29,6 @@ var msg = __importStar(require("../messages"));
         .then(function () {
         msg.fetchAllMsg(log1_1, log2_1)
             .then(function (conv) {
-            console.log(conv);
             chai_1.expect(conv.length).to.be.at.least(1);
         });
     })

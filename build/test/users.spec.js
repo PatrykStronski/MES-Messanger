@@ -11,9 +11,9 @@ var chai_1 = require("chai");
 var users = __importStar(require("../users"));
 // insert user to db
 {
-    var cred = { login: "fajnyUser", password: "chujowechasło" };
-    var cred2 = { login: "głupiUser", password: "chujowechasło" };
-    var us_1 = { name: "fajny user", lname: "barszo fajny" };
+    var cred = { login: "fajnyUser", password: "hasło" };
+    var cred2 = { login: "testUser", password: "hasło" };
+    var us_1 = { name: "testUser", lname: "fajny" };
     users.getUser(cred)
         .then(function (repl) {
         chai_1.expect(repl).to.be.an('object');
