@@ -90,9 +90,11 @@ function fetchAllMsg(us1, us2) {
                             case 1:
                                 conv_id = _a.sent();
                                 pool.query("SELECT * FROM message WHERE conv=" + conv_id + ";", function (err, res) {
+                                    if (err)
+                                        throw err;
                                     if (res) {
                                         if (res.rowCount > 0) {
-                                            resolve(res.rows[0]);
+                                            resolve(res.rows);
                                         }
                                         else {
                                             reject();
@@ -127,7 +129,7 @@ function fetchConv(us1, us2) {
                                 return [4 /*yield*/, pool.query('SELECT id FROM conversation WHERE (account1 = ' + us1_id + ' AND account2 = ' + us2_id + ') OR ( account1 = ' + us2_id + ' AND account2 = ' + us1_id + ');', function (err, res) {
                                         if (err)
                                             throw err;
-                                        resolve(res.rows[0]);
+                                        resolve(res.rows[0].id);
                                     })];
                             case 3:
                                 stream = _a.sent();

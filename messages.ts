@@ -27,14 +27,15 @@ export async function saveMessage(msg: Message, login1: string, login2: string){
 	});
 }
 
-export async function fetchAllMsg(us1: string, us2: string){
+export async function fetchAllMsg(us1: string, us2: string): Promise<Message[]>{
 	return new Promise(async (resolve,reject) => {
 		const conv_id = await fetchConv(us1,us2);
 		pool.query(
 		 	`SELECT * FROM message WHERE conv=${conv_id};`, (err,res) => {
+				if(err) throw err;
 				if(res){
 					if(res.rowCount>0){
-					resolve(res.rows[0]);
+					resolve(res.rows);
 				} else {
 					reject();
 				}
@@ -52,7 +53,7 @@ async function fetchConv(us1: string, us2: string){
 		const stream = await pool.query(
 		 	'SELECT id FROM conversation WHERE (account1 = '+us1_id+' AND account2 = '+us2_id+') OR ( account1 = '+us2_id+' AND account2 = '+us1_id+');', (err,res)=> {
 				if(err) throw err;
-				resolve(res.rows[0]);
+				resolve(res.rows[0].id);
 			});
 	});
 }

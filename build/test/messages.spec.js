@@ -30,7 +30,7 @@ var msg = __importStar(require("../messages"));
         msg.fetchAllMsg(log1_1, log2_1)
             .then(function (conv) {
             console.log(conv);
-            //expect(conv.length).to.be.at.least(1);
+            chai_1.expect(conv.length).to.be.at.least(1);
         });
     })
         .catch(function () {
