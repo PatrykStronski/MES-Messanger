@@ -60,6 +60,7 @@ app.get('/chat', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'chat.html'));
 });
 app.post('/register', function (req, res) {
+    console.log(req.body);
     var user = req.body.user;
     var cred = req.body.credentials;
     users.registerUser(user, cred)

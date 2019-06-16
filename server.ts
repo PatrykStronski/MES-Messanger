@@ -23,6 +23,7 @@ app.get('/chat',(req,res) => {
 });
 
 app.post('/register',(req,res)=> {
+	console.log(req.body);
 	let user: User = req.body.user;
 	let cred: Credentials = req.body.credentials;
 	users.registerUser(user,cred)

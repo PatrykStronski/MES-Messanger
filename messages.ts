@@ -4,9 +4,10 @@
 	import { getUserId } from './users'; 
 
 	const pool = new Pool({
-		user: 'pi',
+		user: 'azath',
 		host: 'localhost',
 		database: 'messanger',
+		password: 'waran138',
 		port: 5432
 	});
 

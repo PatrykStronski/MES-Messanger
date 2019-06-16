@@ -45,72 +45,64 @@ var pool = new pg_1.Pool({
     port: 5432
 });
 function saveMessage(msg, login1, login2) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _this = this;
-        return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (resolve, reject) {
-                    pool.query("SELECT convExists(" + msg.conv + ");", function (err, res) { return __awaiter(_this, void 0, void 0, function () {
-                        var _a, _b;
-                        return __generator(this, function (_c) {
-                            switch (_c.label) {
-                                case 0:
-                                    if (!(res.rows[0].convexists == false)) return [3 /*break*/, 2];
-                                    _a = msg;
-                                    return [4 /*yield*/, createConversation(login1, login2)];
-                                case 1:
-                                    _a.conv = _c.sent();
-                                    _c.label = 2;
-                                case 2:
-                                    _b = msg;
-                                    return [4 /*yield*/, users_1.getUserId(msg.author)];
-                                case 3:
-                                    _b.author_id = _c.sent();
-                                    pool.query("INSERT INTO message(author,date_written,conv,content) VALUES (" + msg.author_id + ",'" + msg.date_written + "'," + msg.conv + ",'" + msg.content + "');", function (err, res) {
-                                        if (err)
-                                            throw err;
-                                        resolve();
-                                    });
-                                    return [2 /*return*/];
-                            }
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        pool.query("SELECT convExists(" + msg.conv + ");", function (err, res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        if (!(res.rows[0].convexists == false)) return [3 /*break*/, 2];
+                        _a = msg;
+                        return [4 /*yield*/, createConversation(login1, login2)];
+                    case 1:
+                        _a.conv = _c.sent();
+                        _c.label = 2;
+                    case 2:
+                        _b = msg;
+                        return [4 /*yield*/, users_1.getUserId(msg.author)];
+                    case 3:
+                        _b.author_id = _c.sent();
+                        pool.query("INSERT INTO message(author,date_written,conv,content) VALUES (" + msg.author_id + ",'" + msg.date_written + "'," + msg.conv + ",'" + msg.content + "');", function (err, res) {
+                            if (err)
+                                throw err;
+                            resolve();
                         });
-                    }); });
-                })];
-        });
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     });
 }
 exports.saveMessage = saveMessage;
 function fetchAllMsg(us1, us2) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _this = this;
+    var _this = this;
+    return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+        var conv_id;
         return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                    var conv_id;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, fetchConv(us1, us2)];
-                            case 1:
-                                conv_id = _a.sent();
-                                pool.query("SELECT * FROM message WHERE conv=" + conv_id + ";", function (err, res) {
-                                    if (err)
-                                        throw err;
-                                    if (res) {
-                                        if (res.rowCount > 0) {
-                                            resolve(res.rows);
-                                        }
-                                        else {
-                                            reject();
-                                        }
-                                    }
-                                    else {
-                                        reject();
-                                    }
-                                });
-                                return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetchConv(us1, us2)];
+                case 1:
+                    conv_id = _a.sent();
+                    pool.query("SELECT * FROM message WHERE conv=" + conv_id + ";", function (err, res) {
+                        if (err)
+                            throw err;
+                        if (res) {
+                            if (res.rowCount > 0) {
+                                resolve(res.rows);
+                            }
+                            else {
+                                reject();
+                            }
+                        }
+                        else {
+                            reject();
                         }
                     });
-                }); })];
+                    return [2 /*return*/];
+            }
         });
-    });
+    }); });
 }
 exports.fetchAllMsg = fetchAllMsg;
 function fetchConv(us1, us2) {

@@ -9,6 +9,8 @@ var pool = new pg_1.Pool({
     port: 5432
 });
 function registerUser(user, cred) {
+    console.log(user);
+    console.log(cred);
     return new Promise(function (res, rej) {
         pool.query("INSERT INTO account(login,pass,name,lname) VALUES('" + cred.login + "','" + cred.password + "','" + user.name + "','" + user.lname + "');", function (err) {
             if (err)

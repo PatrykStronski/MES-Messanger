@@ -4,13 +4,16 @@ import { Credentials } from './interfaces/Credentials';
 import * as crypto from 'crypto';
 
 const pool = new Pool({
-	user: 'pi',
+	user: 'azath',
 	host: 'localhost',
 	database: 'messanger',
+	password: 'waran138',
 	port: 5432
 });
 
 export function registerUser(user: User, cred: Credentials){
+	console.log(user);
+	console.log(cred);
 	return new Promise((res,rej) => {
 		pool.query(
 			`INSERT INTO account(login,pass,name,lname) VALUES('${cred.login}','${cred.password}','${user.name}','${user.lname}');`
