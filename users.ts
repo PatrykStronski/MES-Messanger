@@ -4,10 +4,9 @@ import { Credentials } from './interfaces/Credentials';
 import * as crypto from 'crypto';
 
 const pool = new Pool({
-	user: 'azath',
+	user: 'pi',
 	host: 'localhost',
 	database: 'messanger',
-	password: 'waran138',
 	port: 5432
 });
 
