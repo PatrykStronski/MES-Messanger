@@ -1,33 +1,33 @@
-import { Pool } from 'pg';
-import { Message } from './interfaces/Message';
-import { User } from './interfaces/User';
-import { getUserId } from './users'; 
+	import { Pool } from 'pg';
+	import { Message } from './interfaces/Message';
+	import { User } from './interfaces/User';
+	import { getUserId } from './users'; 
 
-const pool = new Pool({
-	user: 'azath',
-	host: 'localhost',
-	database: 'messanger',
-	password: 'waran138',
-	port: 5432
-});
+	const pool = new Pool({
+		user: 'azath',
+		host: 'localhost',
+		database: 'messanger',
+		password: 'waran138',
+		port: 5432
+	});
 
-export async function saveMessage(msg: Message, login1: string, login2: string){
-	return new Promise((resolve,reject) => {
-		pool.query(`SELECT convExists(${msg.conv});`,async (err,res) => {
-			if(res.rows[0].convexists==false){
-				msg.conv = await createConversation(login1,login2)
-			}
-			msg.author_id = await getUserId(msg.author);
-			pool.query(
-				`INSERT INTO message(author,date_written,conv,content) VALUES (${msg.author_id},'${msg.date_written}',${msg.conv},'${msg.content}');`, (err,res) => {
-					if(err) throw err;
-				resolve();
+	export function saveMessage(msg: Message, login1: string, login2: string){
+		return new Promise((resolve,reject) => {
+			pool.query(`SELECT convExists(${msg.conv});`,async (err,res) => {
+				if(res.rows[0].convexists==false){
+					msg.conv = await createConversation(login1,login2)
+				}
+				msg.author_id = await getUserId(msg.author);
+				pool.query(
+					`INSERT INTO message(author,date_written,conv,content) VALUES (${msg.author_id},'${msg.date_written}',${msg.conv},'${msg.content}');`, (err,res) => {
+						if(err) throw err;
+					resolve();
+				});
 			});
 		});
-	});
-}
+	}
 
-export async function fetchAllMsg(us1: string, us2: string): Promise<Message[]>{
+	export function fetchAllMsg(us1: string, us2: string): Promise<Message[]>{
 	return new Promise(async (resolve,reject) => {
 		const conv_id = await fetchConv(us1,us2);
 		pool.query(

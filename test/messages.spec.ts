@@ -5,8 +5,8 @@ import { User } from '../interfaces/User';
 import { Message } from '../interfaces/Message';
 
 {
-	const log1 = 'user';
-	const log2 = 'us1';
+	const log1 = 'xxxuser';
+	const log2 = 'yyyuser';
 	const msg1: Message = {
 		author: log1,
 		date_written: '2019/12/04 12:42:42',
@@ -25,6 +25,9 @@ import { Message } from '../interfaces/Message';
 		msg.fetchAllMsg(log1,log2)
 		.then((conv) => {
 			expect(conv.length).to.be.at.least(1);
+		})
+		.catch(() => {
+			assert.fail();
 		});
 	})
 	.catch(() => {

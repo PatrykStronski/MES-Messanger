@@ -11,10 +11,15 @@ const pool = new Pool({
 	port: 5432
 });
 
-export async function registerUser(user: User, cred: Credentials){
-	pool.query(
-		`INSERT INTO account(login,pass,name,lname) VALUES('${cred.login}','${cred.password}','${user.name}','${user.lname}');`
-	);
+export function registerUser(user: User, cred: Credentials){
+	return new Promise((res,rej) => {
+		pool.query(
+			`INSERT INTO account(login,pass,name,lname) VALUES('${cred.login}','${cred.password}','${user.name}','${user.lname}');`
+		,(err)=> {
+			if(err) throw err;
+			res();
+		});
+	});
 }
 
 export function getUserId(login:string): Promise<number>{

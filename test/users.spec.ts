@@ -4,10 +4,15 @@ import { Credentials } from '../interfaces/Credentials';
 import { User } from '../interfaces/User';
 
 // insert user to db
-{
-	const cred: Credentials = {login: "fajnyUser",password: "hasło"}
-	const cred2: Credentials = {login: "testUser",password: "hasło"}
-	const us: User = {name: "testUser",lname: "fajny"}
+async function testSuite(){
+	const cred: Credentials = {login: "xxxuser",password: "hasło"}
+	const cred2: Credentials = {login: "tser",password: "hasło"}
+	const us: User = {name: "test",lname: "test_XXX"}
+	try{
+	await users.registerUser(us,cred)
+	} catch(e){
+		console.log('user is already present');
+	}
 	users.getUser(cred)
 	.then((repl) => {
 		expect(repl).to.be.an('object');
@@ -30,3 +35,5 @@ import { User } from '../interfaces/User';
 	.catch(() =>{
 	});
 }
+
+testSuite();
