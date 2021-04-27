@@ -37,7 +37,7 @@
     "http": "0.0.0",
     "pg": "^7.11.0",
     "postgresql": "0.0.1",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "socket.io": "^2.2.0",
     "socket.io-redis": "^5.2.0",
     "ts-postgres": "^1.0.2",
